@@ -1,1 +1,46 @@
-In pursuit of detecting unstinted objects that extend beyond predefined categories, prior arts of open-vocabulary object detection (OVD) typically resort to pretrained vision-language models (VLMs) for base-to-novel category generalization. However, to mitigate the misalignment between upstream image-text pretraining and downstream region-level perception, additional supervisions are indispensable, \eg, image-text pairs or pseudo annotations generated via self-training strategies. In this work, we propose CCKT-Det trained \emph{without} any extra supervision. The proposed framework constructs a cyclic and dynamic knowledge transfer from language queries and visual region features extracted from VLMs, which forces the detector to closely align with the visual-semantic space of VLMs. Specifically, 1) we prefilter and inject semantic priors to guide the learning of queries, and 2) introduce a regional contrastive loss to improve the awareness of queries on novel objects. CCKT-Det can consistently improve performance as the scale of VLMs increases, all while requiring the detector at a moderate level of computation overhead. Comprehensive experimental results demonstrate that our method achieves performance gain of +2.9 % and +10.2% AP50 over previous state-of-the-arts on the challenging COCO benchmark, both \emph{without} and \emph{with} a stronger teacher model. 
+# Cyclic Contrastive Knowledge Transfer for Open-Vocabulary Object Detection
+
+*2024*
+
+[GitHub Repository](https://anonymous.4open.science/r/CCKT-Det-C7B7) | 
+
+## Overview
+
+We propose **RegionCLIP** which significantly extends CLIP to learn region-level visual representations. RegionCLIP aligns text not just with entire images but with specific regions within images, improving the granularity and relevance of the learned representations.
+
+## Installation
+Our models are set under `python=3.9`, `pytorch=2.4.1` . Other versions might be available as well.
+
+1. Compiling CUDA operators as [deformable-detr](https://github.com/fundamentalvision/Deformable-DETR) 
+2. Install other packages including [open-clip](https://github.com/mlfoundations/open_clip), [coco-api](https://github.com/cocodataset/cocoapi),  `mmdet`,  `timm`,  `mmcv-full`
+
+## Data
+For OVD-COCO setting, Please follow download [COCO2017](https://cocodataset.org/#home) dataset and follow [OVR-CNN](https://github.com/alirezazareian/ovr-cnn) to split data into base and novel class.
+
+The data file is organised as following:
+
+```
+coco_path/
+├── train2017/
+├── val2017/
+└── annotations/
+├── instances_train2017_base.json
+└── instances_val2017_all.json
+```
+
+## Run
+
+#### To train a model using 8 cards
+
+```
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node=8 --use_env main.py --with_box_refine --output_dir outputs/
+```
+
+
+
+#### To evaluate a model using 8 cards
+
+```
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node=8 --use_env main.py --with_box_refine --output_dir outputs/ --eval --resume outputs/checkpoint.pth
+```
+
