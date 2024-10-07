@@ -6,7 +6,7 @@
 
 ## Overview
 
-We propose **RegionCLIP** which significantly extends CLIP to learn region-level visual representations. RegionCLIP aligns text not just with entire images but with specific regions within images, improving the granularity and relevance of the learned representations.
+We propose **CCKT-Det**. 
 
 ## Installation
 Our models are set under `python=3.9`, `pytorch=2.4.1` . Other versions might be available as well.
